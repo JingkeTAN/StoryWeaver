@@ -11,5 +11,10 @@ config_version=5
 [application]
 
 config/name="StoryWeaver"
+run/main_scene="uid://k1qdh5t4qimp"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+StoryEngineGlobal="*res://scripts/core/StoryEngine.gd"

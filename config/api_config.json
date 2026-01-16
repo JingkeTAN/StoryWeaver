@@ -1,10 +1,6 @@
 {
-  "anthropic": {
-    "api_key": "你的Anthropic API Key",
-    "base_url": "https://api.anthropic.com/v1"
-  },
   "openai": {
-    "api_key": "你的OpenAI API Key",
-    "base_url": "https://api.openai.com/v1"
+	"api_key": "sk-g1WEIm8OBc76621f8634T3BLbkFJ5eb70C25223D44c4ad4F",
+	"base_url": "https://c-z0-api-01.hash070.com/v1"
   }
 }
