@@ -7,7 +7,7 @@ extends Control
 @onready var status_label: Label = $VBoxContainer/StatusLabel
 #@onready var story_engine: StoryEngine = $StoryEngine
 
-var is_processing: bool = false
+var is_currently_processing: bool = false
 
 func _ready():
 	# 确认节点路径正确
@@ -41,12 +41,54 @@ func _on_input_submitted(_text: String):
 
 func submit_input():
 	print("\n=== submit_input 被调用 ===")
-	print("is_processing: ", is_processing)
-	if is_processing:
+	print("is_currently_processing: ", is_currently_processing)
+	if is_currently_processing:
 		print("❌ 正在处理中，忽略")
 		return
 	
 	var user_input = input_field.text.strip_edges()
+	print("用户输入:", user_input)
+	if user_input.is_empty():
+		print("❌ 输入为空")
+		return
+	
+	
+	
+		# 特殊指令：移动角色（/move 名字 位置）
+	if user_input.begins_with("/move "): 
+		var parts = user_input.split(" ")
+		if parts.size() == 3:
+			StoryEngineGlobal.world_state.update_character_location(parts[1], parts[2])
+			append_to_story("\n[color=yellow]📍 %s 移动到 %s[/color]\n" % [parts[1], parts[2]])
+		else:
+			append_to_story("\n[color=red]用法: /move 角色名 地点[/color]\n")
+		input_field.text = ""
+		return
+	
+	# 特殊指令：查看位置
+	if user_input == "/where":
+		var locs = StoryEngineGlobal.world_state.character_locations
+		var info = "\n[color=cyan]当前位置：\n"
+		for char_name in locs.keys():
+			info += "- %s: %s\n" % [char_name, locs[char_name]]
+		info += "[/color]\n"
+		append_to_story(info)
+		input_field.text = ""
+		return
+		
+	# 指令3：帮助
+	if user_input == "/help":
+		var help_text = """
+[color=cyan]可用指令：
+- /move 角色名 地点  # 移动角色
+- /where            # 查看所有角色位置
+- /help             # 显示帮助
+[/color]
+"""
+		append_to_story(help_text)
+		input_field.text = ""
+		return  
+	
 	print("用户输入: ", user_input)
 	if user_input.is_empty():
 		print("❌ 输入为空")
@@ -61,6 +103,9 @@ func submit_input():
 	print("开始调用 StoryEngine.process_player_input...")
 	# 处理
 	StoryEngineGlobal.process_player_input(user_input)
+	
+	
+	
 
 func _on_story_updated(narrative: String):
 	append_to_story("\n" + narrative + "\n")
@@ -68,12 +113,12 @@ func _on_story_updated(narrative: String):
 	story_text.scroll_to_line(story_text.get_line_count())
 
 func _on_processing_started():
-	is_processing = true
+	is_currently_processing = true
 	send_button.disabled = true
 	status_label.text = "AI思考中..."
 
 func _on_processing_finished():
-	is_processing = false
+	is_currently_processing = false
 	send_button.disabled = false
 	status_label.text = "就绪"
 

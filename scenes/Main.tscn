@@ -7,9 +7,8 @@ bg_color = Color(0.17254902, 0.24313726, 0.3137255, 1)
 
 [node name="Control" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-offset_left = 282.0
-offset_top = 280.0
+offset_left = 322.0
+offset_top = 320.0
 offset_right = 322.0
 offset_bottom = 320.0
 script = ExtResource("1_elqb8")
@@ -21,18 +20,26 @@ offset_bottom = 40.0
 
 [node name="StoryDisplay" type="Panel" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_qnwvq")
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/StoryDisplay"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+offset_right = 400.0
+offset_bottom = 600.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="StoryText" type="RichTextLabel" parent="VBoxContainer/StoryDisplay/MarginContainer"]
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
 scroll_following = true
+scroll_following_visible_characters = true
 
 [node name="InputArea" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

@@ -1,0 +1,6 @@
+{
+  "openai": {
+	"api_key": "你的key",
+	"base_url": "https://c-z0-api-01.hash070.com/v1"
+  }
+}

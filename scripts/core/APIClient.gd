@@ -6,6 +6,13 @@ var config: Dictionary = {}
 
 signal client_ready
 
+# 只要 model 里包含 "claude"
+# 就用 claude 配置
+func get_provider_config(model: String) -> Dictionary:
+	if model.to_lower().contains("claude"):
+		return config.claude
+	return config.openai
+	
 func _ready():
 	load_config()
 	emit_signal("client_ready")
@@ -29,11 +36,13 @@ func call_chat_completion(
 	var http := HTTPRequest.new()
 	add_child(http)
 
+	var provider = get_provider_config(model)
+
 	var headers = [
 		"Content-Type: application/json",
-		"Authorization: Bearer " + config.openai.api_key
+		"Authorization: Bearer " + provider.api_key
 	]
-
+	
 	var body = {
 		"model": model,
 		"messages": [
@@ -43,7 +52,7 @@ func call_chat_completion(
 		"max_tokens": max_tokens
 	}
 
-	var url = config.openai.base_url + "/chat/completions"
+	var url = provider.base_url + "/chat/completions"
 	print("📡 请求:", url)
 	print("📤 请求体:", JSON.stringify(body))
 

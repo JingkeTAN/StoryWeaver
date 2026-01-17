@@ -6,6 +6,9 @@ var character_name: String
 var personality: String
 var role_type: String  # "protagonist", "companion", "narrator"
 
+# 数据库引用
+var db_manager: DatabaseManager
+
 # 简化的属性（MVP阶段）
 var hp: int = 100
 var max_hp: int = 100
@@ -54,24 +57,37 @@ func get_recent_memory(count: int = 3) -> String:
 	var recent = memory.slice(-count) if memory.size() > count else memory
 	return "\n".join(recent) if recent.size() > 0 else "（无）"
 
-func add_memory(content: String):
+func add_memory(content: String, event_id: String = ""):
 	memory.append(content)
+	
+	# 保存到数据库
+	if db_manager:
+		db_manager.save_character_memory(character_name, content, event_id)
+		
 	# 限制记忆数量（MVP阶段简单处理）
 	if memory.size() > 20:
 		memory.remove_at(0)
 
 # 生成决策
-func make_decision(event_description: String, api_client: APIClient) -> Dictionary:
+func make_decision(event: StoryEvent, api_client: APIClient) -> Dictionary:
 	var prompt = """
 %s
 
 当前情境：
 %s
 
+事件类型：%s
+事件地点：%s
+
 你会如何反应？请简短回答（100字内）：
 - 你的想法
 - 你的行动
-""" % [get_state_summary(), event_description]
+""" % [
+		get_state_summary(),
+		event.description,
+		event.event_type,
+		event.location
+	]
 	
 	var response = await api_client.call_chat_completion(
 		get_system_prompt(),
@@ -80,7 +96,17 @@ func make_decision(event_description: String, api_client: APIClient) -> Dictiona
 		200
 	)
 	
-	return {
+	# 确保返回格式正确（防御性编程）
+	var result = {
 		"character": character_name,
-		"response": response
+		"response": response if response.length() > 0 else "（沉默）",
+		"timestamp": Time.get_unix_time_from_system()
 	}
+	
+	return result
+	
+# 从数据库加载记忆
+func load_memory_from_db(db: DatabaseManager):
+	db_manager = db
+	memory = db_manager.load_character_memories(character_name, 20)
+	print("✓ %s 加载了 %d 条记忆" % [character_name, memory.size()])
