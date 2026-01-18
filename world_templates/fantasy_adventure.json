@@ -1,0 +1,57 @@
+{
+  "template_id": "fantasy_adventure",
+  "template_name": "奇幻冒险",
+  "description": "经典的剑与魔法世界",
+  "version": "1.0",
+  
+  "world_settings": {
+	"magic_level": "high",
+	"technology_level": "medieval"
+  },
+  
+  "attributes": {
+	"physical": [
+	  {"id": "hp", "name": "生命", "type": "numeric", "range": [0, 100], "default": 100},
+	  {"id": "max_hp", "name": "最大生命", "type": "numeric", "range": [0, 200], "default": 100}
+	],
+	"magical": [
+	  {"id": "mana", "name": "魔力", "type": "numeric", "range": [0, 100], "default": 50},
+	  {"id": "max_mana", "name": "最大魔力", "type": "numeric", "range": [0, 200], "default": 50}
+	]
+  },
+  
+  "action_keywords": {
+	"magic": ["施法", "魔法", "咒语", "法术", "火球", "冰锥", "治疗", "传送"],
+	"combat": ["攻击", "砍", "刺", "劈", "冲锋", "格挡"]
+  },
+  
+  "constraint_rules": [
+	{
+	  "id": "low_mana",
+	  "name": "魔力不足",
+	  "condition": "mana < 10",
+	  "effects": {
+		"forbidden_keywords": ["施法", "魔法", "咒语", "法术", "火球", "冰锥", "治疗", "传送"],
+		"message": "魔力不足，无法施法"
+	  }
+	},
+	{
+	  "id": "low_hp",
+	  "name": "生命危险",
+	  "condition": "hp < 20",
+	  "effects": {
+		"forbidden_keywords": ["冲锋"],
+		"message": "生命值过低，不适合冒险行动"
+	  }
+	}
+  ],
+  
+  "action_costs": {
+	"火球术": {"mana": 15},
+	"治疗术": {"mana": 20},
+	"冲锋": {"hp": 5}
+  },
+  
+  "designer_prompt_extra": "这是一个奇幻冒险故事，包含魔法、怪物和英雄。",
+  "narrator_style": "史诗风格，描写战斗场面要激烈，魔法效果要华丽"
+}

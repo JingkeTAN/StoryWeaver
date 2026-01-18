@@ -8,10 +8,10 @@ func _init(ws: WorldState):
 	world_state = ws
 
 # 主函数：判断哪些角色应该知道这个事件
-func determine_aware_characters(event: StoryEvent, all_characters: Array[AICharacter]) -> Array[AICharacter]:
-	var aware_chars: Array[AICharacter] = []
+func determine_aware_characters(event: StoryEvent, all_characters: Array) -> Array:
+	var aware_chars: Array = []
 	
-	print("\n=== 知识分发：%s ===" % event.description.substr(0, 30))
+	print("\n=== 知识分发：%s ===" % event.description.substr(0, 50))
 	print("事件类型: %s | 地点: %s | 作用域: %s" % [event.event_type, event.location, event.scope])
 	
 	for character in all_characters:
@@ -29,7 +29,7 @@ func determine_aware_characters(event: StoryEvent, all_characters: Array[AIChara
 	return aware_chars
 
 # 判断单个角色是否应该知道
-func evaluate_knowledge_access(character: AICharacter, event: StoryEvent) -> Dictionary:
+func evaluate_knowledge_access(character, event: StoryEvent) -> Dictionary:
 	# 规则1：直接参与者必定知道
 	if character.character_name in event.participants:
 		return {"knows": true, "reason": "直接参与"}

@@ -1,6 +1,9 @@
 # Godot 4+ specific ignores
 /android/
-
+# Godot SQLite binaries
+addons/
+addons/godot-sqlite/bin/
+addons/godot-sqlite/bin/**
 
 # API / config
 config/api_config.json

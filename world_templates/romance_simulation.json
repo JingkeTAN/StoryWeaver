@@ -1,0 +1,287 @@
+{
+  "template_id": "romance_simulation",
+  "template_name": "恋爱模拟",
+  "description": "校园/都市恋爱故事，关注人物关系和情感发展",
+  "version": "1.0",
+  
+  "world_settings": {
+	"magic_level": "none",
+	"technology_level": "modern",
+	"tone": "slice_of_life",
+	"default_location": "学校"
+  },
+  
+  "attributes": {
+	"physical": [
+	  {
+		"id": "health",
+		"name": "健康",
+		"type": "numeric",
+		"range": [0, 100],
+		"default": 100,
+		"description": "身体健康程度"
+	  },
+	  {
+		"id": "energy",
+		"name": "精力",
+		"type": "numeric",
+		"range": [0, 100],
+		"default": 80,
+		"description": "每日可用精力，睡眠恢复"
+	  },
+	  {
+		"id": "appearance",
+		"name": "外貌",
+		"type": "numeric",
+		"range": [0, 100],
+		"default": 50,
+		"description": "外在吸引力"
+	  }
+	],
+	
+	"emotional": [
+	  {
+		"id": "mood",
+		"name": "心情",
+		"type": "numeric",
+		"range": [0, 100],
+		"default": 60,
+		"description": "当前情绪状态"
+	  },
+	  {
+		"id": "loneliness",
+		"name": "寂寞",
+		"type": "numeric",
+		"range": [0, 100],
+		"default": 30,
+		"description": "孤独感，过高会影响心情"
+	  },
+	  {
+		"id": "stress",
+		"name": "压力",
+		"type": "numeric",
+		"range": [0, 100],
+		"default": 20,
+		"description": "心理压力"
+	  }
+	],
+	
+	"social": [
+	  {
+		"id": "charm",
+		"name": "魅力",
+		"type": "numeric",
+		"range": [0, 100],
+		"default": 50,
+		"description": "社交吸引力"
+	  },
+	  {
+		"id": "reputation",
+		"name": "名声",
+		"type": "numeric",
+		"range": [-100, 100],
+		"default": 0,
+		"description": "社会评价，负数为坏名声"
+	  }
+	],
+	
+	"relationship": [
+	  {
+		"id": "affection",
+		"name": "好感度",
+		"type": "relationship_numeric",
+		"range": [0, 100],
+		"default": 30,
+		"description": "对特定角色的好感",
+		"per_character": true
+	  },
+	  {
+		"id": "intimacy",
+		"name": "亲密度",
+		"type": "relationship_numeric",
+		"range": [0, 100],
+		"default": 0,
+		"description": "关系亲密程度",
+		"per_character": true
+	  },
+	  {
+		"id": "trust",
+		"name": "信任",
+		"type": "relationship_numeric",
+		"range": [0, 100],
+		"default": 50,
+		"description": "相互信任程度",
+		"per_character": true
+	  }
+	],
+	
+	"special": [
+	  {
+		"id": "relationship_status",
+		"name": "恋爱状态",
+		"type": "enum",
+		"values": ["单身", "暧昧", "恋爱中", "已婚", "分手"],
+		"default": "单身"
+	  },
+	  {
+		"id": "pregnancy",
+		"name": "怀孕状态",
+		"type": "enum",
+		"values": ["未孕", "怀疑", "孕早期", "孕中期", "孕晚期"],
+		"default": "未孕",
+		"gender_restriction": "female"
+	  },
+	  {
+		"id": "menstrual_day",
+		"name": "生理周期",
+		"type": "cyclic",
+		"cycle_length": 28,
+		"default": 1,
+		"gender_restriction": "female"
+	  }
+	],
+	
+	"resources": [
+	  {
+		"id": "money",
+		"name": "金钱",
+		"type": "numeric",
+		"range": [0, 9999999],
+		"default": 5000,
+		"unit": "元"
+	  }
+	]
+  },
+  
+  "action_keywords": {
+	"dating": ["约会", "邀请", "表白", "告白", "牵手", "拥抱", "亲吻"],
+	"intimate": ["亲密", "过夜", "同居", "做爱", "上床"],
+	"social": ["聊天", "送礼", "帮忙", "安慰", "鼓励"],
+	"negative": ["分手", "吵架", "冷战", "欺骗", "背叛"],
+	"self_care": ["休息", "睡觉", "运动", "打扮", "购物"]
+  },
+  
+  "constraint_rules": [
+	{
+	  "id": "low_energy",
+	  "name": "精力不足",
+	  "condition": "energy < 20",
+	  "effects": {
+		"forbidden_keywords": ["约会", "运动", "工作"],
+		"message": "你太累了，需要先休息"
+	  }
+	},
+	{
+	  "id": "low_mood",
+	  "name": "心情低落",
+	  "condition": "mood < 30",
+	  "effects": {
+		"forbidden_keywords": ["表白", "约会"],
+		"message": "你现在心情不好，不适合做这些事"
+	  }
+	},
+	{
+	  "id": "high_loneliness",
+	  "name": "过度寂寞",
+	  "condition": "loneliness > 80",
+	  "effects": {
+		"mood_penalty": -10,
+		"message": "强烈的孤独感让你难以集中精神"
+	  }
+	},
+	{
+	  "id": "pregnancy_restriction",
+	  "name": "孕期限制",
+	  "condition": "pregnancy != '未孕'",
+	  "effects": {
+		"forbidden_keywords": ["剧烈运动", "喝酒", "熬夜"],
+		"message": "怀孕期间需要注意身体"
+	  }
+	},
+	{
+	  "id": "relationship_gate",
+	  "name": "关系门槛",
+	  "condition": "affection < 50",
+	  "effects": {
+		"forbidden_keywords": ["表白", "亲吻"],
+		"message": "你们的关系还不够亲密"
+	  }
+	},
+	{
+	  "id": "intimacy_gate",
+	  "name": "亲密门槛",
+	  "condition": "intimacy < 70 AND relationship_status != '恋爱中'",
+	  "effects": {
+		"forbidden_keywords": ["过夜", "同居", "亲密"],
+		"message": "你们的关系还没发展到这一步"
+	  }
+	},
+	{
+	  "id": "no_money",
+	  "name": "没钱了",
+	  "condition": "money < 100",
+	  "effects": {
+		"forbidden_keywords": ["购物", "送礼", "请客"],
+		"message": "你的钱不够了"
+	  }
+	}
+  ],
+  
+  "action_costs": {
+	"约会": {"energy": 30, "money": 200},
+	"送礼": {"money": 500},
+	"运动": {"energy": 40},
+	"购物": {"energy": 20, "money": 300},
+	"表白": {"energy": 50},
+	"工作": {"energy": 50, "money": -800}
+  },
+  
+  "action_effects": {
+	"约会": {"mood": 15, "loneliness": -20, "affection": 5},
+	"聊天": {"loneliness": -10, "affection": 2},
+	"送礼": {"affection": 10},
+	"运动": {"health": 5, "appearance": 2, "stress": -10},
+	"休息": {"energy": 50, "stress": -15},
+	"表白_成功": {"relationship_status": "恋爱中", "mood": 30},
+	"表白_失败": {"mood": -30, "affection": -10}
+  },
+  
+  "character_archetypes": [
+	{
+	  "id": "protagonist",
+	  "name": "主角",
+	  "description": "玩家控制的主角",
+	  "personality_traits": ["可自定义"]
+	},
+	{
+	  "id": "love_interest",
+	  "name": "恋爱对象",
+	  "description": "可攻略的角色",
+	  "personality_traits": ["温柔", "傲娇", "天然呆", "腹黑", "病娇"]
+	},
+	{
+	  "id": "friend",
+	  "name": "朋友",
+	  "description": "提供帮助和建议的角色",
+	  "personality_traits": ["开朗", "稳重", "八卦"]
+	},
+	{
+	  "id": "rival",
+	  "name": "情敌",
+	  "description": "竞争对手",
+	  "personality_traits": ["自信", "嫉妒", "优秀"]
+	}
+  ],
+  
+  "event_types": [
+	{"id": "daily", "name": "日常", "noise_level": 0.2},
+	{"id": "date", "name": "约会", "noise_level": 0.4},
+	{"id": "confession", "name": "告白", "noise_level": 0.3},
+	{"id": "conflict", "name": "冲突", "noise_level": 0.7},
+	{"id": "special", "name": "特殊事件", "noise_level": 0.5}
+  ],
+  
+  "designer_prompt_extra": "这是一个恋爱模拟故事。注重角色之间的情感互动和关系发展。避免过于戏剧化的冲突，保持日常生活的氛围。",
+  
+  "narrator_style": "温馨细腻，注重心理描写和情感表达，适当使用内心独白"
+}

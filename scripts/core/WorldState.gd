@@ -45,7 +45,7 @@ func record_event(event: StoryEvent, known_by: Array[String]):
 
 # 获取角色知道的事件
 func get_known_events(character_name: String) -> Array[Dictionary]:
-	var known = []
+	var known: Array[Dictionary] = []
 	for fact in world_facts:
 		if character_name in fact.known_by:
 			known.append(fact)
