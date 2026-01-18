@@ -17,12 +17,12 @@ A Godot-based multi-agent AI story generation system.
 3. Open project in Godot 4.5+
 
 ## Not yet implemented features / 未实现功能（当前版本）：
-- Multiple world templates switching
+- Multiple world templates switching (achieved)
 - Custom character creation
 - Voice synthesis
 - Community sharing
 - Local/offline model support
 - Advanced memory system 
-- More world genres beyond fantasy
+- More world genres beyond fantasy(achieved)
 
 These features are planned for future versions.
